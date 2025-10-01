@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const api = axios.create({
   baseURL: API_BASE_URL
 });
 
-// Add token to requests
+// Token to requests
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -15,12 +15,11 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle token expiration
+// Token expiration
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Do not clear local storage here; allow route guards to handle state
     }
     return Promise.reject(error);
   }

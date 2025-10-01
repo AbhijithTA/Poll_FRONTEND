@@ -48,7 +48,7 @@ const UserSearch = ({ selectedUsers, onUserSelect, onUserRemove, placeholder = "
       }
     };
 
-    const timeoutId = setTimeout(searchUsers, 300); // Debounce search
+    const timeoutId = setTimeout(searchUsers, 300); 
     return () => clearTimeout(timeoutId);
   }, [query, selectedUsers]);
 
@@ -83,7 +83,7 @@ const UserSearch = ({ selectedUsers, onUserSelect, onUserRemove, placeholder = "
         )}
       </div>
 
-      {/* Search Results Dropdown */}
+
       {showResults && searchResults.length > 0 && (
         <div 
           ref={resultsRef}
@@ -107,7 +107,7 @@ const UserSearch = ({ selectedUsers, onUserSelect, onUserRemove, placeholder = "
         </div>
       )}
 
-      {/* Selected Users */}
+
       {selectedUsers.length > 0 && (
         <div className="mt-2">
           <div className="text-sm font-medium text-gray-700 mb-2">Selected Users:</div>
