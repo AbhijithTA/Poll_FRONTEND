@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { pollsAPI } from '../services/api';
+import { notifySuccess, notifyError } from '../components/Toast';
 import { PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const EditPoll = () => {
@@ -116,9 +117,12 @@ const EditPoll = () => {
       };
 
       await pollsAPI.update(id, pollData);
+      notifySuccess('Poll updated successfully');
       navigate('/admin/polls');
     } catch (error) {
-      setError(error.response?.data?.message || 'Failed to update poll');
+      const msg = error.response?.data?.message || 'Failed to update poll';
+      setError(msg);
+      notifyError(msg);
     } finally {
       setSaving(false);
     }

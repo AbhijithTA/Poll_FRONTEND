@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { pollsAPI } from '../services/api';
 import { PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { notifySuccess, notifyError } from '../components/Toast';
 import UserSearch from '../components/UserSearch';
 
 const CreatePoll = () => {
@@ -92,9 +93,12 @@ const CreatePoll = () => {
       };
 
       await pollsAPI.create(pollData);
+      notifySuccess('Poll created successfully');
       navigate('/admin/polls');
     } catch (error) {
-      setError(error.response?.data?.message || 'Failed to create poll');
+      const msg = error.response?.data?.message || 'Failed to create poll';
+      setError(msg);
+      notifyError(msg);
     } finally {
       setLoading(false);
     }

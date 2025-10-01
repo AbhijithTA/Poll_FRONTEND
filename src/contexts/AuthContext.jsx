@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authAPI } from '../services/api';
+import { notifySuccess, notifyError } from '../components/Toast';
 
 const AuthContext = createContext();
 
@@ -34,8 +35,10 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
       
+      notifySuccess('Logged in successfully');
       return { success: true };
     } catch (error) {
+      notifyError(error.response?.data?.message || 'Login failed');
       return { 
         success: false, 
         error: error.response?.data?.message || 'Login failed' 
@@ -52,8 +55,10 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(newUser));
       setUser(newUser);
       
+      notifySuccess('Registration successful');
       return { success: true };
     } catch (error) {
+      notifyError(error.response?.data?.message || 'Registration failed');
       return { 
         success: false, 
         error: error.response?.data?.message || 'Registration failed' 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { pollsAPI } from '../services/api';
+import { notifySuccess, notifyError } from '../components/Toast';
 import { 
   PencilIcon, 
   TrashIcon, 
@@ -38,9 +39,10 @@ const AdminPolls = () => {
     try {
       await pollsAPI.delete(pollId);
       setPolls(polls.filter(poll => poll._id !== pollId));
+      notifySuccess('Poll deleted successfully');
     } catch (error) {
       console.error('Error deleting poll:', error);
-      alert('Failed to delete poll');
+      notifyError(error.response?.data?.message || 'Failed to delete poll');
     } finally {
       setDeletingId(null);
     }
@@ -112,6 +114,11 @@ const AdminPolls = () => {
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">
                           {poll.title}
+                          {poll.visibility === 'private' && (
+                            <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                              Private
+                            </span>
+                          )}
                         </div>
                         <div className="text-sm text-gray-500">
                           {poll.options.length} options

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ToasterProvider from './ToasterProvider';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { 
@@ -35,6 +36,7 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <ToasterProvider />
       <div className={`fixed inset-0 flex z-40 md:hidden ${sidebarOpen ? '' : 'hidden'}`}>
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)} />
         <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white">

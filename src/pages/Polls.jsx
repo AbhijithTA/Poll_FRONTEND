@@ -12,10 +12,18 @@ import {
 const Polls = () => {
   const [polls, setPolls] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('all'); // all, active, expired
+  const [filter, setFilter] = useState('all'); 
   const { user } = useAuth();
   
   const isAdmin = user?.role === 'admin';
+
+  
+  const getBarColor = (percentage) => {
+    if (percentage >= 75) return 'bg-green-600';
+    if (percentage >= 50) return 'bg-blue-600';
+    if (percentage >= 25) return 'bg-yellow-500';
+    return 'bg-red-500';
+  };
 
   useEffect(() => {
     fetchPolls();
@@ -122,7 +130,7 @@ const Polls = () => {
                         {!isExpired && poll.isActive && (
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
-                              className="bg-primary-600 h-2 rounded-full transition-all duration-300"
+                              className={`${getBarColor(percentage)} h-2 rounded-full transition-all duration-300`}
                               style={{ width: `${percentage}%` }}
                             ></div>
                           </div>

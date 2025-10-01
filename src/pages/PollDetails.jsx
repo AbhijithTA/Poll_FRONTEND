@@ -8,6 +8,7 @@ import {
   ChartBarIcon,
   ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
+import { notifySuccess, notifyError } from '../components/Toast';
 
 const PollDetails = () => {
   const { id } = useParams();
@@ -34,13 +35,13 @@ const PollDetails = () => {
       setPoll(response.data);
       setHasVoted(response.data.hasVoted);
       
-      // If user has already voted, set their previous vote and show results
+      // if user already voted logic
       if (response.data.hasVoted && response.data.userVote !== null) {
         setSelectedOption(response.data.userVote);
         setViewResults(true);
       }
       
-      // Check if user has already voted or poll is expired to show results
+    
       const isExpired = new Date(response.data.expiresAt) < new Date();
       if (isExpired) {
         setViewResults(true);
@@ -67,8 +68,11 @@ const PollDetails = () => {
       setHasVoted(response.data.poll.hasVoted);
       setSelectedOption(response.data.poll.userVote);
       setViewResults(true);
+      notifySuccess('Vote submitted');
     } catch (error) {
-      setError(error.response?.data?.message || 'Failed to submit vote');
+      const msg = error.response?.data?.message || 'Failed to submit vote';
+      setError(msg);
+      notifyError(msg);
     } finally {
       setVoting(false);
     }
