@@ -1,16 +1,47 @@
-# React + Vite
+# Polling System – Frontend (React)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Minimal React UI for the NestJS polling backend. This app focuses on showcasing backend capabilities: auth, role-based access, poll management, voting, and results.
 
-Currently, two official plugins are available:
+## Tech
+- React + Vite
+- Axios (API)
+- react-router-dom (routing)
+- react-hot-toast (notifications)
+- Utility-first classes for styling
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Key Screens
+- Auth: Login, Register
+- User:
+  - All Polls (public + private where allowed)
+  - Poll Details (vote, see results)
+  - My Votes
+- Admin:
+  - Create Poll (public/private, duration, allow-list users)
+  - Manage Polls (list, edit active, delete)
 
-## React Compiler
+## How It Works with Backend
+- JWT stored in `localStorage` (`token`, `user`)
+- Axios interceptor adds `Authorization: Bearer <token>`
+- Private polls: admin selects allowed users (searched by name/email), frontend sends their user IDs
+- Vote counts are returned from backend and rendered dynamically
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Environment
+Update API base if needed in the env file.
 
-## Expanding the ESLint configuration
+Create a `.env` file in the root folder of the frontend and set the backend API URL, for example:
+```
+VITE_API_BASE_URL=http://localhost:3000
+```
+## Run Locally
+```
+npm install
+npm run dev
+```
+Open the URL Vite prints (typically `http://localhost:5173`).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Notes
+- UI is intentionally lightweight.
+- Toasters (react-hot-toast) are shown on login/register, create/edit/delete poll, and voting events.
+
+## Notes on AI Assistance 
+Some part of this project I utilized AI tools (ChatGPT/DeepSeek) to accelerate development through boilerplate code generation, debugging assistance, and architectural guidance. These tools helped quickly set up Nest.js/React foundations and resolve technical challenges like MongoDB index issues, while maintaining full code understanding and customization. The AI served as a development accelerator while all implementation decisions remained developer-driven.
