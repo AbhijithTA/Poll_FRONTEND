@@ -27,7 +27,7 @@ Minimal React UI for the NestJS polling backend. This app focuses on showcasing 
 
 ## 🚀 LIVE DEMO
 
-**LINK:** [Live Demo URL]
+**LINK:** poll-frontend-self.vercel.app
 
 ### 🔐 TESTING CREDENTIALS
 
@@ -42,7 +42,6 @@ Minimal React UI for the NestJS polling backend. This app focuses on showcasing 
 ---
 
 ## Environment
-Update API base if needed in the env file.
 
 Create a `.env` file in the root folder of the frontend and set the backend API URL, for example:
 ```
