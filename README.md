@@ -27,7 +27,7 @@ Minimal React UI for the NestJS polling backend. This app focuses on showcasing 
 
 ## 🚀 LIVE DEMO
 
-**LINK:** poll-frontend-self.vercel.app.com
+**LINK:** [https://poll-frontend-self.vercel.app.com](https://poll-frontend-self.vercel.app.com)
 
 > Note: Backend is hosted on Render free tier. The server may spin down on inactivity and can take a short while to wake up on the first request.
 
