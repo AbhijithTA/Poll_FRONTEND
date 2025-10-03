@@ -26,14 +26,15 @@ const Dashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
+      // For dashboard, we need all polls to calculate accurate stats
       const [pollsResponse, votesResponse] = await Promise.all([
-        pollsAPI.getAll(),
+        pollsAPI.getAll(1, 100), // Get up to 100 polls for stats calculation
         pollsAPI.getUserVotes(),
       ]);
 
-      const polls = pollsResponse.data;
+      // Use the new paginated response structure
+      const polls = pollsResponse.data.polls;
       const votes = votesResponse.data;
-
 
       const activePolls = polls.filter(poll => 
         new Date(poll.expiresAt) > new Date() && poll.isActive

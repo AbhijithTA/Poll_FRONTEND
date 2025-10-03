@@ -6,13 +6,18 @@ import {
   EyeIcon, 
   LockClosedIcon,
   ChartBarIcon,
-  CheckCircleIcon
+  CheckCircleIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon
 } from '@heroicons/react/24/outline';
 
 const Polls = () => {
   const [polls, setPolls] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all'); 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pagination, setPagination] = useState(null);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const { user } = useAuth();
   
   const isAdmin = user?.role === 'admin';
@@ -27,18 +32,21 @@ const Polls = () => {
 
   useEffect(() => {
     fetchPolls();
-  }, []);
+  }, [currentPage, itemsPerPage]);
 
   const fetchPolls = async () => {
     try {
-      const response = await pollsAPI.getAll();
-      setPolls(response.data);
+      setLoading(true);
+      const response = await pollsAPI.getAll(currentPage, itemsPerPage);
+      setPolls(response.data.polls);
+      setPagination(response.data.pagination);
     } catch (error) {
       console.error('Error fetching polls:', error);
     } finally {
       setLoading(false);
     }
   };
+
 
   const filteredPolls = polls.filter(poll => {
     const isExpired = new Date(poll.expiresAt) < new Date();
@@ -52,6 +60,15 @@ const Polls = () => {
         return true;
     }
   });
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const handleItemsPerPageChange = (newLimit) => {
+    setItemsPerPage(parseInt(newLimit));
+    setCurrentPage(1); 
+  };
 
   const getPollStatus = (poll) => {
     if (!poll.isActive) return { text: 'Closed', color: 'text-red-600 bg-red-100' };
@@ -72,6 +89,16 @@ const Polls = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-900">All Polls</h1>
         <div className="flex space-x-2">
+          <select
+            value={itemsPerPage}
+            onChange={(e) => handleItemsPerPageChange(e.target.value)}
+            className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+          >
+            <option value={5}>5 per page</option>
+            <option value={10}>10 per page</option>
+            <option value={20}>20 per page</option>
+            <option value={50}>50 per page</option>
+          </select>
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
@@ -186,6 +213,94 @@ const Polls = () => {
           );
         })}
       </div>
+
+      
+      {pagination && pagination.totalPages > 1 && (
+        <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+          <div className="flex flex-1 justify-between sm:hidden">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={!pagination.hasPrevPage}
+              className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={!pagination.hasNextPage}
+              className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
+          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm text-gray-700">
+                Showing{' '}
+                <span className="font-medium">
+                  {((currentPage - 1) * itemsPerPage) + 1}
+                </span>{' '}
+                to{' '}
+                <span className="font-medium">
+                  {Math.min(currentPage * itemsPerPage, pagination.totalCount)}
+                </span>{' '}
+                of{' '}
+                <span className="font-medium">{pagination.totalCount}</span>{' '}
+                results
+              </p>
+            </div>
+            <div>
+              <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={!pagination.hasPrevPage}
+                  className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span className="sr-only">Previous</span>
+                  <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+                </button>
+                
+                
+                {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (pagination.totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= pagination.totalPages - 2) {
+                    pageNum = pagination.totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+                  
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => handlePageChange(pageNum)}
+                      className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
+                        currentPage === pageNum
+                          ? 'z-10 bg-primary-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600'
+                          : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+                
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={!pagination.hasNextPage}
+                  className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span className="sr-only">Next</span>
+                  <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+                </button>
+              </nav>
+            </div>
+          </div>
+        </div>
+      )}
 
       {filteredPolls.length === 0 && (
         <div className="text-center py-12">

@@ -35,7 +35,8 @@ export const authAPI = {
 
 export const pollsAPI = {
   create: (pollData) => api.post("/polls", pollData),
-  getAll: () => api.get("/polls"),
+  getAll: (page = 1, limit = 10) =>
+    api.get(`/polls?page=${page}&limit=${limit}`),
   getAdminPolls: () => api.get("/polls/admin"),
   getById: (id) => api.get(`/polls/${id}`),
   vote: (id, optionIndex) => api.post(`/polls/${id}/vote`, { optionIndex }),

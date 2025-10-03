@@ -25,6 +25,22 @@ Minimal React UI for the NestJS polling backend. This app focuses on showcasing 
 - Private polls: admin selects allowed users (searched by name/email), frontend sends their user IDs
 - Vote counts are returned from backend and rendered dynamically
 
+## 🚀 LIVE DEMO
+
+**LINK:** [Live Demo URL]
+
+### 🔐 TESTING CREDENTIALS
+
+**ADMIN ACCOUNT**
+- **Email:** admin@gmail.com
+- **Password:** test123
+
+**USER ACCOUNTS**
+- **User 1:** test@gmail.com / test123
+- **User 2:** test2@gmail.com / test123
+
+---
+
 ## Environment
 Update API base if needed in the env file.
 
